@@ -12,8 +12,11 @@
 #include "InterruptRoutines.h"
 #include "project.h"
 
+
+
 uint8 SendBytesFlag=0;
 uint8 ch_recived;
+int32 output_foto_mv;
 
 CY_ISR(Custom_isr_ADC)
 {
@@ -22,8 +25,18 @@ CY_ISR(Custom_isr_ADC)
     Timer_ADC_ReadStatusRegister();
     if (SendBytesFlag==1)
     {
+        output_foto_mv=ADC_DelSig_CountsTo_mVolts(); //devo mettere il valore dell'intensità luminosa nella stanza 
+   
+        if (output_foto_mv < THRESHOLD)
+        {
+            PWM_LED_WriteCompare(); // valore dato dal potenziometro 
+        }
+        else PWM_LED_WriteCompare(0); //Se l'intensità luminosa nella stanza è abbastanza alta non accendo il LED
         
+        PacketReadyFlag=1;
     }
+    
+    
     
 }
 
