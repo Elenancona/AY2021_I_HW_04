@@ -35,6 +35,7 @@
 <WriteAppMarketingVersionLastSavedWith v="4.3" />
 <CyGuid_dcbd9771-0334-43dc-9cc3-fe99dc3c5316 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtWorkspaceSerialize+CyPrjDependencyList" version="4">
 <wrkspc_dependencies>
+<wrkspc_dependency project="ANCONA_ELENA.cydsn\ANCONA_ELENA.cyprj" dependency="..\..\PSoC_AnnotationLibrary\AnnotationLibrary\AnnotationLibrary_lib\AnnotationLibrary_lib.cylib\AnnotationLibrary_lib.cyprj" />
 <wrkspc_dependency project="ANCONA_ELENA.cydsn\ANCONA_ELENA.cyprj" dependency="..\..\..\Documents\PSoC Creator\AnnotationLibrary\AnnotationLibrary_lib\AnnotationLibrary_lib.cylib\AnnotationLibrary_lib.cyprj" />
 <wrkspc_dependency project="ANDRIOTTO_LUCA.cydsn\ANDRIOTTO_LUCA.cyprj" dependency="..\..\..\Documents\PSoC Creator\AnnotationLibrary\AnnotationLibrary_lib\AnnotationLibrary_lib.cylib\AnnotationLibrary_lib.cyprj" />
 <wrkspc_dependency project="ARRIGONI_PIERGIORGIO.cydsn\ARRIGONI_PIERGIORGIO.cyprj" dependency="..\..\..\Documents\PSoC Creator\AnnotationLibrary\AnnotationLibrary_lib\AnnotationLibrary_lib.cylib\AnnotationLibrary_lib.cyprj" />
