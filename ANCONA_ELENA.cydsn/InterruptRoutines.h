@@ -17,12 +17,13 @@
     
     #define BYTE_TO_SEND 4 //Ho due byte per il potenziometro e due per il fotoresistore
     #define TRANSMIT_BUFFER_SIZE 1+BYTE_TO_SEND+1 //dimensione della stringa che mando all'UART, aggiungo un byte di tail e uno di header
-    #define THRESHOLD 3000;
+
     
     CY_ISR_PROTO(Custom_isr_ADC);
     CY_ISR_PROTO(Custom_isr_UART);
     
-    char DataBuffer [TRANSMIT_BUFFER_SIZE];
+    uint8 DataBuffer [TRANSMIT_BUFFER_SIZE];
     volatile uint8 PacketReadyFlag;
+    int32 value_digit;
     
 #endif 

@@ -12,7 +12,9 @@
 #include "InterruptRoutines.h"
 #include "project.h"
 
-
+#define PHOTO 0 //Il fotoresistore è nel canale di imput "0" dell'AMux 
+#define POT 1  //Il potenziomentro è nel canale di imput "1" dell'AMux
+#define THRESHOLD 2000
 
 uint8 SendBytesFlag=0;
 uint8 ch_recived;
@@ -20,25 +22,44 @@ int32 output_foto_mv;
 
 CY_ISR(Custom_isr_ADC)
 {
-   // riporto lo status register del timer ad un livello basso 
-    
+    // riporto lo status register del timer ad un livello basso 
     Timer_ADC_ReadStatusRegister();
+        
+        
     if (SendBytesFlag==1)
     {
-        output_foto_mv=ADC_DelSig_CountsTo_mVolts(); //devo mettere il valore dell'intensità luminosa nella stanza 
+        AMux_Select(PHOTO); 
+        value_digit = ADC_DelSig_Read32(); //Lettura ADC
+    
+        if(value_digit<0)       value_digit=0;
+        if(value_digit>65535)   value_digit=65535;
+        
+        DataBuffer[1] = value_digit >> 8;
+        DataBuffer[2] = value_digit & 0xFF;
+        
+        output_foto_mv=ADC_DelSig_CountsTo_mVolts(value_digit); //output_foto_mv è l'intensità luminosa nella stanza 
    
-        if (output_foto_mv < THRESHOLD)
+        if (output_foto_mv < THRESHOLD) //se l'intensità nella stanza è minore della soglia allora accendo il LED
         {
-            PWM_LED_WriteCompare(); // valore dato dal potenziometro 
+            AMux_Select(POT); 
+            value_digit = ADC_DelSig_Read32(); //Lettura ADC
+    
+            if(value_digit<0)       value_digit=0;
+            if(value_digit>65535)   value_digit=65535;
+        
+            DataBuffer[3] = value_digit >> 8;
+            DataBuffer[4] = value_digit & 0xFF;
+            
+            PWM_LED_WriteCompare(value_digit); //Accendo il LED con il valore dato dal potenziometro 
         }
         else PWM_LED_WriteCompare(0); //Se l'intensità luminosa nella stanza è abbastanza alta non accendo il LED
         
         PacketReadyFlag=1;
     }
     
-    
-    
 }
+
+
 
 CY_ISR_PROTO(Custom_isr_UART)
 {
