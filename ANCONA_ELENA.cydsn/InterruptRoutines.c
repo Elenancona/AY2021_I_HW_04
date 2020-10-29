@@ -22,37 +22,54 @@ int32 output_foto_mv;
 
 CY_ISR(Custom_isr_ADC)
 {
-    // riporto lo status register del timer ad un livello basso 
+    //read Timer status register to bring interrupt line low
     Timer_ADC_ReadStatusRegister();
         
         
     if (SendBytesFlag==1)
     {
+        //select the channel of the AMux 
         AMux_Select(PHOTO); 
-        value_digit = ADC_DelSig_Read32(); //Lettura ADC
+        
+        //set the value digit as the value read the ADC
+        value_digit = ADC_DelSig_Read32(); 
     
+        //value digit must be between 0 and 65535
         if(value_digit<0)       value_digit=0;
         if(value_digit>65535)   value_digit=65535;
         
+        //put the MSB and LSB in DataBuffer
         DataBuffer[1] = value_digit >> 8;
         DataBuffer[2] = value_digit & 0xFF;
         
-        output_foto_mv=ADC_DelSig_CountsTo_mVolts(value_digit); //output_foto_mv è l'intensità luminosa nella stanza 
+        
+        //set output_foto_mv as the light intesity in the room
+        output_foto_mv=ADC_DelSig_CountsTo_mVolts(value_digit); 
    
-        if (output_foto_mv < THRESHOLD) //se l'intensità nella stanza è minore della soglia allora accendo il LED
+        
+        //if the light intensity in the room is less than the threshold switch ON the LED
+        if (output_foto_mv < THRESHOLD) 
         {
+            //select AMux chanell
             AMux_Select(POT); 
-            value_digit = ADC_DelSig_Read32(); //Lettura ADC
+            
+            //read ADC
+            value_digit = ADC_DelSig_Read32(); 
     
+            //value digit must be between 0 and 65535
             if(value_digit<0)       value_digit=0;
             if(value_digit>65535)   value_digit=65535;
-        
+            
+            //put the MSB and LSB in DataBuffer        
             DataBuffer[3] = value_digit >> 8;
             DataBuffer[4] = value_digit & 0xFF;
             
-            PWM_LED_WriteCompare(value_digit); //Accendo il LED con il valore dato dal potenziometro 
+            //LED on with intensity given by the potentiometer
+            PWM_LED_WriteCompare(value_digit); 
         }
-        else PWM_LED_WriteCompare(0); //Se l'intensità luminosa nella stanza è abbastanza alta non accendo il LED
+        
+        //if the light intensity of the room is grater than the threshold switch OFF the LED
+        else PWM_LED_WriteCompare(0); 
         
         PacketReadyFlag=1;
     }

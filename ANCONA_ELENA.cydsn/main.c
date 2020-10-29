@@ -16,24 +16,37 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
 
+    //start ADC
     ADC_DelSig_Start();
+    
+    //start UART
     UART_Start();
+    
+    //start PWM
     PWM_LED_Start();
+    
+    //start AMux
     AMux_Start();
     
+    //start irs ADC and irs UART
     isr_ADC_StartEx(Custom_isr_ADC);
     isr_RX_StartEx(Custom_isr_UART);
     
+    
+    //inizialize and end the buffer 
     DataBuffer[0] = 0xA0;
     DataBuffer[TRANSMIT_BUFFER_SIZE-1] = 0xC0; 
+    
     PacketReadyFlag = 0;
-    ADC_DelSig_StartConvert();
+    
+    //start conversion
+    ADC_DelSig_StartConvert(); 
   
     for(;;)
     {
         if (PacketReadyFlag==1) 
         {   
-            //the samples are sent through UART communication
+            //send data
             UART_PutArray(DataBuffer, TRANSMIT_BUFFER_SIZE);
             PacketReadyFlag=0;
         }
