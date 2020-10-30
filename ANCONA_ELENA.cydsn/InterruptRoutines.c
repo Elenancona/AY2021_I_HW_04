@@ -12,8 +12,8 @@
 #include "InterruptRoutines.h"
 #include "project.h"
 
-#define PHOTO 0 //Il fotoresistore è nel canale di imput "0" dell'AMux 
-#define POT 1  //Il potenziomentro è nel canale di imput "1" dell'AMux
+#define PHOTO 0 //Photoresitor is in channel "0" of the AMux  
+#define POT 1  //Potentiometer is in channel "1" of the AMux 
 #define THRESHOLD 2000
 
 uint8 SendBytesFlag=0;
