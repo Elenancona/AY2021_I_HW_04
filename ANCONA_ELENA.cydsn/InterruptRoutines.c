@@ -80,24 +80,35 @@ CY_ISR(Custom_isr_ADC)
 
 CY_ISR_PROTO(Custom_isr_UART)
 {
-    ch_recived =UART_GetChar(); //salvo in una variabile il carattere ricevuto
+    //char recived saved in a variable named "ch_recived"
+    ch_recived =UART_GetChar(); 
     
     switch (ch_recived)
     {
     
         case'B':
         case'b':
+        
             SendBytesFlag = 1;
-            OnBoard_LED_Write(1); //accendo il LED del PsoC se ricevo il comando 'b' o 'B'
+        
+            //if the char recived is 'b' or 'B' switch ON the on board LED
+            OnBoard_LED_Write(1); 
+            
             Timer_ADC_Start();
         break;
         
         case'S':
         case's':
+            
             SendBytesFlag=0;
-            OnBoard_LED_Write(0); //spengo il LED del PsoC quando ricevo il byte 's' o 'S'
+            
+            //if the char recived is 's' or 'S' switch OFF the on board LED
+            OnBoard_LED_Write(0); 
+            
             Timer_ADC_Stop();
-            PWM_LED_WriteCompare(0); // spengo il led quando il sistema è spento
+            
+            //switch OFF the RED LED when the system is OFF
+            PWM_LED_WriteCompare(0); 
         break;
     default:
         break;
